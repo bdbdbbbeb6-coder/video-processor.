@@ -3,12 +3,13 @@ FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     MEDIA_DIR=/data/media \
-    FONT_NAME="Noto Naskh Arabic"
+    FONT_NAME="DejaVu Sans"
 
-# تثبيت الحزم النظامية وخطوط Noto العربية الفصحى بدقة
+# تثبيت الحزم النظامية وخطوط العرض العربية بدقة عالية
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ffmpeg \
-        fonts-noto-arabic \
+        fonts-noto-core \
+        fonts-freefont-ttf \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
