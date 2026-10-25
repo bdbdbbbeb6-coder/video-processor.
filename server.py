@@ -26,7 +26,7 @@ from pydantic import BaseModel
 
 MEDIA_DIR = Path(os.getenv("MEDIA_DIR", "./media")).resolve()
 PUBLIC_BASE = os.getenv("PUBLIC_BASE", "").rstrip("/")
-FONT_NAME = os.getenv("FONT_NAME", "Noto Naskh Arabic")
+FONT_NAME = os.getenv("FONT_NAME", "DejaVu Sans")
 FFMPEG_BIN = os.getenv("FFMPEG_BIN", "ffmpeg")
 YTDLP_BIN = os.getenv("YTDLP_BIN", "yt-dlp")
 COOKIES_FILE = os.getenv("COOKIES_FILE", "./cookies.txt")
@@ -62,13 +62,16 @@ def _run(cmd, timeout=300, cwd=None):
 
 
 def _download(url, job_id):
+    # تنظيف الرابط من البارامترات الزائدة لتجاوز حظر وسائط إنستغرام
+    clean_url = url.split("?")[0]
     cmd = [
         YTDLP_BIN,
         "--no-playlist",
         "--no-warnings",
         "--no-progress",
         "--socket-timeout", "30",
-        "--retries", "3",
+        "--retries", "5",
+        "--user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         "-f", "bv*[ext=mp4]+ba[ext=m4a]/b[ext=mp4]/b",
         "--merge-output-format", "mp4",
         "--print", "after_move:filepath",
@@ -76,7 +79,7 @@ def _download(url, job_id):
     ]
     if Path(COOKIES_FILE).is_file():
         cmd[1:1] = ["--cookies", COOKIES_FILE]
-    cmd.append(url)
+    cmd.append(clean_url)
     out = _run(cmd, timeout=300).strip().splitlines()
     if not out:
         raise RuntimeError("download produced no file")
@@ -240,7 +243,7 @@ def media(name: str, request: Request):
 
 
 async def _cleanup_loop():
-    while True:
+    while Test := True:
         await asyncio.sleep(600)
         now = time.time()
         for item in MEDIA_DIR.glob("*"):
