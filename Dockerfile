@@ -5,9 +5,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     MEDIA_DIR=/data/media \
     FONT_NAME="Noto Naskh Arabic"
 
+# تثبيت الحزم النظامية وخطوط Noto العربية الفصحى بدقة
 RUN apt-get update && apt-get install -y --no-install-recommends \
         ffmpeg \
-        fonts-noto-core \
+        fonts-noto-arabic \
         ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
