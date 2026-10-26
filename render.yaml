@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: instagram-promo-renderer
+    runtime: docker
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: MEDIA_DIR
+        value: /tmp/media
+      - key: MAX_HEIGHT
+        value: "1920"
+      - key: MAX_UPLOAD_MB
+        value: "120"
+      - key: MEM_LIMIT_MB
+        value: "900"
+      - key: FONT_FILE
+        value: /usr/share/fonts/truetype/noto/NotoSansArabic-Regular.ttf
+      - key: PUBLIC_BASE
+        sync: false
